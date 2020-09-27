@@ -5,6 +5,7 @@ import { db, auth } from "./firebase";
 import Post from "./Post";
 import { makeStyles } from "@material-ui/core/styles";
 import ImageUpload from "./ImageUpload";
+import InstagramEmbed from "react-instagram-embed";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -59,9 +60,13 @@ function App() {
   }, [user, username]);
 
   useEffect(() => {
-    db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-      setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() }))
+        );
+      });
   }, []);
 
   const signUp = (event: any) => {
@@ -90,7 +95,6 @@ function App() {
   };
   return (
     <div className="app">
-     
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -166,31 +170,49 @@ function App() {
           src="http://picsum.photos/300/50"
           alt=""
         />
-         {user ? (
-        <Button onClick={() => auth.signOut()}>Log out</Button>
-      ) : (
-        <div className="app__loginContainer">
-          <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-          <Button onClick={() => setOpen(true)}>Sign Up</Button>
-        </div>
-      )}
+        {user ? (
+          <Button onClick={() => auth.signOut()}>Log out</Button>
+        ) : (
+          <div className="app__loginContainer">
+            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+            <Button onClick={() => setOpen(true)}>Sign Up</Button>
+          </div>
+        )}
       </div>
-     
-     <div className="app__posts">
 
-      {posts.map(({ post, id }: any) => {
-        return (
-          <Post
-            key={id}
-            username={post.username}
-            caption={post.caption}
-            imageUrl={post.imageUrl}
-          />
-        );
-      })}
-     </div>
+      <div className="app__posts">
+        <div className="app_postsLeft">
+        {posts.map(({ post, id }: any) => {
+          return (
+            <Post
+              key={id}
+              user={user}
+              postId={id}
+              username={post.username}
+              caption={post.caption}
+              imageUrl={post.imageUrl}
+            />
+          );
+        })}
+        </div>
+        <div className="app__postsRight">
 
-{
+      <InstagramEmbed
+        url="https://instagram.com/p/B_uf9dmAGPw/"
+        maxWidth={320}
+        hideCaption={false}
+        containerTagName="div"
+        protocol=""
+        injectScript
+        onLoading={() => {}}
+        onSuccess={() => {}}
+        onAfterRender={() => {}}
+        onFailure={() => {}}
+      />
+        </div>
+      </div>
+
+      {
         //@ts-ignore
         user?.displayName ? (
           //@ts-ignore

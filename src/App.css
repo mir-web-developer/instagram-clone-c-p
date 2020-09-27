@@ -9,12 +9,16 @@
 }
 
 .app__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   padding:20px;
   background-color: white;
   border-bottom: 1px solid lightgray;
   object-fit: contain;
   display:flex; 
   justify-content: space-between;
+
 }
 
 .app__centerTag {
@@ -30,4 +34,10 @@
 
 .app__posts {
   padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.app__postsRight {
+  margin-left: 20px;
 }
